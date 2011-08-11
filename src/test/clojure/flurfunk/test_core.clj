@@ -1,10 +1,11 @@
 (ns flurfunk.test-core
   (:use clojure.test
-        clojure.contrib.string
+        clojure.contrib.string ;; TODO: Use require, if possible
         flurfunk.core)
   (:require [clojure.xml :as xml]
             [clojure.contrib.duck-streams :as streams]
-            [clojure.contrib.io :as io]))
+            [clojure.contrib.io :as io]
+            [flurfunk.marshalling :as ms]))
 
 (defn http-get [resource & params]
   (main-routes {:request-method :get :uri resource :params (first params)}))
@@ -16,16 +17,6 @@
   (xml/parse (io/input-stream (streams/to-byte-array
                                (http-get-string resource)))))
 
-(defn parse-message [xml]
-  (let [attrs (:attrs xml)]
-    {:body (first (:content xml))
-     :id (:id attrs)
-     :author (:author attrs)}))
-
-(defn parse-messages [xml]
-  (map (fn [x] (parse-message x))
-       (:content xml)))
-
 (deftest test-index-page
   (is (substring? "flurfunk.js"
                   (http-get-string "/"))))
@@ -34,28 +25,23 @@
   (is (= 200 (:status (http-get "/messages")))))
 
 (deftest test-get-messages-empty
-  (is (empty? (parse-messages (http-get-xml "/messages")))))
+  (is (empty? (ms/unmarshal-messages (http-get-xml "/messages")))))
 
 (defn messages-fixture [f]
   (binding [get-messages (fn [] [{:body "foo" :id "1337" :author "thomas"}
                                  {:body "" :id "2448" :author "felix"}])]
     (f)))
 
-(deftest test-get-messages-body
+(deftest test-get-messages
   (messages-fixture
    (fn []
-     (is (= "foo"
-            (:body (first (parse-messages
-                           (http-get-xml "/messages")))))))))
-
-(deftest test-get-messages-attributes
-  (messages-fixture
-   (fn []
-     (let [messages (parse-messages (http-get-xml "/messages"))
+     (let [messages (ms/unmarshal-messages (http-get-xml "/messages"))
            message (first messages)]
-       (are (= "1337" (:id message))
-            (= "thomas" (:author message)))))))
-
+       (are [v k] (= v (k message))
+            "foo" :body
+            "1337" :id
+            "thomas" :author)))))
+            
 (deftest test-get-message-not-found
   (is (= 404
          (:status (http-get "/message/1337")))))
@@ -64,17 +50,31 @@
   (messages-fixture
    (fn []
      (is (empty? 
-          (:body (parse-message (http-get-xml "/message/2448"))))))))
+          (:body (ms/unmarshal-message (http-get-xml "/message/2448"))))))))
 
-(deftest test-get-message-body
+(deftest test-get-message
   (messages-fixture
    (fn []
-     (is (= "foo"
-            (:body (parse-message (http-get-xml "/message/1337"))))))))
+     (let [message (ms/unmarshal-message (http-get-xml "/message/1337"))]
+       (are [v k] (= v (k message))
+            "foo" :body
+            "1337" :id
+            "thomas" :author)))))
 
-(deftest test-get-message-attributes
-  (messages-fixture
-   (fn []
-     (let [message (parse-message (http-get-xml "/message/1337"))]
-           (are (= "1337" (:id message))
-                (= "thomas" (:author message)))))))
+(deftest test-post-message-successful
+  (is (= 200
+         (:status (main-routes {:request-method :post :uri "/message"
+                                :body "<message></message>"})))))
+
+(deftest test-post-message
+  (let [messages (transient [])]
+    (binding [add-message (fn [message] (conj! messages message))]
+      (main-routes {:request-method :post :uri "/message"
+                    :body "<message author='Felix'>foobar</message>"})
+      (let [message (first (persistent! messages))]
+        (are [v k] (= v (k message))
+             "foobar" :body
+             "Felix" :author)))))
+
+
+  
