@@ -18,7 +18,10 @@
 
 (defroutes main-routes
   (GET "/" [] (html
-               [:head [:title "Flurfunk"]]
+               [:head
+                [:title "Flurfunk"]
+                [:link {:rel "stylesheet" :type "text/css"
+                        :href "flurfunk.css"}]]
                [:body
                 [:script {:src "flurfunk.js"}]]))
   (GET "/messages" []

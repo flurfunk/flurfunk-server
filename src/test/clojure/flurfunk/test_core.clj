@@ -19,9 +19,11 @@
                                (http-get-string resource)))))
 
 (deftest test-index-page
-  (is (substring? "flurfunk.js"
-                  (http-get-string "/"))))
-
+  (let [response (http-get-string "/")]
+    (are [s] (substring? s response)
+         "flurfunk.js"
+         "flurfunk.css")))
+         
 (deftest test-get-messages-successful
   (is (= 200 (:status (http-get "/messages")))))
 
