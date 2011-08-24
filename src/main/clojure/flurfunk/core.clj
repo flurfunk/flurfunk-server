@@ -19,6 +19,7 @@
 (defroutes main-routes
   (GET "/" [] (html
                [:head
+                [:meta {:charset "utf-8"}]
                 [:title "Flurfunk"]
                 [:link {:rel "stylesheet" :type "text/css"
                         :href "flurfunk.css"}]]
