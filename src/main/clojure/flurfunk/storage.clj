@@ -11,7 +11,7 @@
 
 (defn add-message [message]
   (let [message-with-id (conj message {:id (generate-id)})]
-  (def messages (conj messages message-with-id))))
+  (def messages (cons message-with-id messages))))
 
 (defn find-message [id]
   (first (filter (fn [message] (= id (:id message))) messages)))
