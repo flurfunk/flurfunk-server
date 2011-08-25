@@ -17,6 +17,6 @@
     (add-message {:author "thomas" :body "barfoo"})
     (let [message (find-message id)]
       (are [v k] (= v (k message))
-           "foobar" :body
-           "felix" :author))))
+           "barfoo" :body
+           "thomas" :author))))
     
