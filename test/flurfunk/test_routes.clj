@@ -1,7 +1,7 @@
-(ns flurfunk.test-core
+(ns flurfunk.test-routes
   (:use clojure.test
         clojure.contrib.string ;; TODO: Use require, if possible
-        flurfunk.core)
+        flurfunk.routes)
   (:require [clojure.xml :as xml]
             [clojure.contrib.duck-streams :as streams]
             [clojure.contrib.io :as io]

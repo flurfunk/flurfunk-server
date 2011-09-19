@@ -1,12 +1,14 @@
-(ns flurfunk.core
-  "The core service of Flurfunk, provides the index page and the REST API."
+(ns flurfunk.routes
+  "The routes of Flurfunk."
   (:use compojure.core
         ring.util.servlet
-        hiccup.core)
-  (:require [compojure.route :as route]
-            [clojure.xml :as xml]
+        hiccup.core
+        [hiccup.middleware :only (wrap-base-url)])
+  (:require [clojure.xml :as xml]
             [clojure.contrib.duck-streams :as streams]
             [clojure.contrib.io :as io]
+            [compojure.route :as route]
+            [compojure.handler :as handler]
             [flurfunk.marshalling :as ms]
             [flurfunk.storage :as storage])
   (:gen-class
@@ -33,7 +35,9 @@
          {:body "" :status 404}))
   (POST "/message" {body :body} (storage/add-message (parse-message body))
         "")
-  (route/files "/" {:root "src/main/webapp"})
+  (route/resources "/")
   (route/not-found "Page not found"))
 
-(defservice main-routes)
+(def app
+     (-> (handler/site main-routes)
+         (wrap-base-url)))
