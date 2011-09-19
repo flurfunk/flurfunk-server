@@ -10,23 +10,21 @@
             [compojure.route :as route]
             [compojure.handler :as handler]
             [flurfunk.marshalling :as ms]
-            [flurfunk.storage :as storage])
-  (:gen-class
-   :extends javax.servlet.http.HttpServlet))
+            [flurfunk.storage :as storage]))
 
-(defn parse-message [s]
+(defn- parse-message [s]
   (let [xml (xml/parse (io/input-stream (streams/to-byte-array s)))]
     (ms/unmarshal-message xml)))
 
 (defroutes main-routes
-  (GET "/" [] (html
+  (GET "/" {context :context} (html
                [:head
                 [:meta {:charset "utf-8"}]
                 [:title "Flurfunk"]
                 [:link {:rel "stylesheet" :type "text/css"
-                        :href "flurfunk.css"}]]
+                        :href (str context "/flurfunk.css")}]]
                [:body
-                [:script {:src "flurfunk.js"}]]))
+                [:script {:src (str context "/flurfunk.js")}]]))
   (GET "/messages" []
        (ms/marshal-messages (storage/get-messages)))
   (GET "/message/:id" [id]
