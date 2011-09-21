@@ -37,8 +37,11 @@ Running the tests
 Adding the web frontend
 -----------------------
 
-    cd ../flurfunk-client
-    make install
+    cd ..
+    git clone git@viaboxxsystems.de:flurfunk/flurfunk-web.git
+    cd flurfunk-web
+    make
+    cp flurfunk.js flurfunk.css ../flurfunk-server/resources/public
 
 Running the server
 ------------------
