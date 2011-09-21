@@ -5,3 +5,4 @@
 /.lein-failures
 /fleetdb-standalone.jar
 /flurfunk.fdb
+/temp

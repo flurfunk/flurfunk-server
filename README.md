@@ -58,6 +58,8 @@ Using a persistent database
 
 Messages are per default stored in memory. For a persistent database, install fleetdb:
 
+    mkdir temp
+    cd temp
     curl -O http://fleetdb.s3.amazonaws.com/fleetdb-standalone.jar
 
 Then launch the fleetdb server:
