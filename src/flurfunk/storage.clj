@@ -39,7 +39,7 @@
                                          {"where" ["=" :id id]}])))))
 
 (defn- make-storage []
-  (if (= (System/getProperty "fleetdb") "true")
+  (if (= (System/getProperty "flurfunk.fleetdb") "true")
     (FleetDBStorage. (db/connect {:host "127.0.0.1" :port 3400}))
     (do
       (println (str "Using memory database. Set the system property "
