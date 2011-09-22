@@ -51,7 +51,8 @@ Running the server
 Creating a WAR
 --------------
 
-    lein ring uberwar flurfunk.war
+    mkdir temp
+    lein ring uberwar temp/flurfunk.war
 
 Using a persistent database
 ---------------------------
