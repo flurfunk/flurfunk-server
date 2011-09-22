@@ -4,17 +4,13 @@
         ring.util.servlet
         hiccup.core
         [hiccup.middleware :only (wrap-base-url)])
-  (:require [clojure.xml :as xml]
-            [clojure.contrib.duck-streams :as streams]
-            [clojure.contrib.io :as io]
-            [compojure.route :as route]
+  (:require [compojure.route :as route]
             [compojure.handler :as handler]
             [flurfunk.marshalling :as ms]
             [flurfunk.storage :as storage]))
 
 (defn- parse-message [s]
-  (let [xml (xml/parse (io/input-stream (streams/to-byte-array s)))]
-    (ms/unmarshal-message xml)))
+    (ms/unmarshal-message (ms/parse-xml s)))
 
 (defroutes main-routes
   (GET "/" {context :context} (html
