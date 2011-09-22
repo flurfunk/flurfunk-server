@@ -20,6 +20,11 @@
          (unmarshal-message {:attrs {:author "felix"}
                              :content ["foobar"]}))))
 
+(deftest test-unmarshal-message-with-html
+  (is (= {:author "felix" :body "foo&lt;br/&gt;bar"}
+         (unmarshal-message {:attrs {:author "felix"}
+                             :content ["foo<br/>bar"]}))))
+
 (deftest test-unmarshal-messages
   (is (= [{:id "1" :author "felix" :body "foobar"}]
          (unmarshal-messages {:content [{:attrs {:id "1" :author "felix"}

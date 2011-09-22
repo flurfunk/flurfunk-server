@@ -23,10 +23,22 @@
                       messages)))
        "</messages>"))
 
+(defn- replace-all [string replacements]
+  (if (nil? string)
+    nil
+    (reduce (fn [string [from to]]
+              (.replaceAll string from to)) string replacements)))
+
+(defn- escape-xml [string]
+  (replace-all string [["&" "&amp;"]
+                       ["\"" "&quot;"]
+                       ["<" "&lt;"]
+                       [">" "&gt;"]]))
+
 (defn unmarshal-message [xml]
   (let [attrs (:attrs xml)
-        message {:body (first (:content xml))
-                 :author (:author attrs)}]
+        message {:body (escape-xml (first (:content xml)))
+                 :author (escape-xml (:author attrs))}]
     (if-let [id (:id attrs)] 
       (conj message {:id id})
       message)))
