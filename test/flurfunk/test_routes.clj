@@ -1,10 +1,10 @@
 (ns flurfunk.test-routes
   (:use clojure.test
-        clojure.contrib.string ;; TODO: Use require, if possible
         flurfunk.routes)
   (:require [clojure.xml :as xml]
             [clojure.contrib.duck-streams :as streams]
             [clojure.contrib.io :as io]
+            [clojure.contrib.string :as string]
             [flurfunk.marshalling :as ms]
             [flurfunk.storage :as storage]))
 
@@ -20,7 +20,7 @@
 
 (deftest test-index-page
   (let [response (http-get-string "/")]
-    (are [s] (substring? s response)
+    (are [s] (string/substring? s response)
          "flurfunk.js"
          "flurfunk.css")))
          
