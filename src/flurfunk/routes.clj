@@ -27,7 +27,9 @@
        (if-let [message (storage/find-message id)]
          (ms/marshal-message message)
          {:body "" :status 404}))
-  (POST "/message" {body :body} (storage/add-message (parse-message body))
+  (POST "/message" {body :body}
+        (storage/add-message (conj (parse-message body)
+                                   {:timestamp (System/currentTimeMillis)}))
         "")
   (route/resources "/")
   (route/not-found "Page not found"))

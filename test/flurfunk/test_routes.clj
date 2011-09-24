@@ -33,14 +33,15 @@
 
 (deftest test-get-messages
   (binding [storage/get-messages
-            (fn [] [{:body "foo" :id "1337" :author "thomas"}
-                    {:body "" :id "2448" :author "felix"}])]
+            (fn [] [{:body "foo" :id "1337" :author "thomas" :timestamp 10001}
+                    {:body "" :id "2448" :author "felix" :timestamp 10002}])]
     (let [messages (ms/unmarshal-messages (http-get-xml "/messages"))
           message (first messages)]
       (are [v k] (= v (k message))
            "foo" :body
            "1337" :id
-           "thomas" :author))))
+           "thomas" :author
+           10001 :timestamp))))
 
 (deftest test-get-message-not-found
   (binding [storage/find-message (fn [id] nil)]
@@ -54,12 +55,13 @@
 
 (deftest test-get-message
   (binding [storage/find-message
-            (fn [id] {:id "1337" :author "thomas" :body "foo"})]
+            (fn [id] {:id "1337" :author "thomas" :timestamp 10001 :body "foo"})]
     (let [message (ms/unmarshal-message (http-get-xml "/message/1337"))]
       (are [v k] (= v (k message))
            "foo" :body
            "1337" :id
-           "thomas" :author))))
+           "thomas" :author
+           10001 :timestamp))))
 
 (deftest test-post-message-successful
   (binding [storage/add-message (fn [message])]
@@ -75,4 +77,5 @@
       (let [message (first (persistent! messages))]
         (are [v k] (= v (k message))
              "foobar" :body
-             "Felix" :author)))))
+             "Felix" :author)
+        (is (> (:timestamp message) 0))))))

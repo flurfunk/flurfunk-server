@@ -12,6 +12,7 @@
 (defn marshal-message [message]
   (str "<message id='" (:id message)
        "' author='" (:author message)
+       "' timestamp='" (:timestamp message)
        "'>" (:body message) "</message>"))
 
 (defn marshal-messages [messages]
@@ -37,11 +38,15 @@
 
 (defn unmarshal-message [xml]
   (let [attrs (:attrs xml)
-        message {:body (escape-xml (first (:content xml)))
-                 :author (escape-xml (:author attrs))}]
+        timestamp (:timestamp attrs)
+        message (transient {:body (escape-xml (first (:content xml)))
+                            :author (escape-xml (:author attrs))})]
     (if-let [id (:id attrs)] 
-      (conj message {:id id})
-      message)))
+      (conj! message {:id id}))
+    (if-let [timestamp (:timestamp attrs)]
+      (if (not (empty? timestamp))
+        (conj! message {:timestamp (Integer. timestamp)})))
+    (persistent! message)))
   
 (defn unmarshal-messages [xml]
   (map (fn [x] (unmarshal-message x))
