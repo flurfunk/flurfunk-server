@@ -29,8 +29,8 @@
 
   (storage-add-message
    [this message]
-   ;; TODO: Find a better way to generate the ID.
-   (let [message-with-id (conj message {:id (str (System/currentTimeMillis))})]
+   (let [message-with-id
+         (conj message {:id (str (client ["count" "messages"]))})]
      (client ["insert" "messages" message-with-id])))
 
   (storage-find-message
