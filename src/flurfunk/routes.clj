@@ -21,8 +21,12 @@
                         :href (str context "/flurfunk.css")}]]
                [:body
                 [:script {:src (str context "/flurfunk.js")}]]))
-  (GET "/messages" []
-       (ms/marshal-messages (storage/get-messages)))
+  (GET "/messages" {params :params}
+       (ms/marshal-messages
+        (if-let [since (:since params)]
+          (do
+            (storage/get-messages (Long. since)))
+          (storage/get-messages))))
   (GET "/message/:id" [id]
        (if-let [message (storage/find-message id)]
          (ms/marshal-message message)

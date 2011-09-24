@@ -45,7 +45,7 @@
       (conj! message {:id id}))
     (if-let [timestamp (:timestamp attrs)]
       (if (not (empty? timestamp))
-        (conj! message {:timestamp (Integer. timestamp)})))
+        (conj! message {:timestamp (Long. timestamp)})))
     (persistent! message)))
   
 (defn unmarshal-messages [xml]

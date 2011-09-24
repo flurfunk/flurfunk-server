@@ -4,12 +4,16 @@
 	    [clojure.walk :as walk]))
 
 (defprotocol Storage
-  (storage-get-messages [this])
+  (storage-get-messages [this] [this since])
   (storage-add-message [this message])
   (storage-find-message [this id]))
 
 (deftype MemoryStorage [messages] Storage
   (storage-get-messages [this] @messages)
+
+  (storage-get-messages
+   [this since]
+   (filter (fn [message] (> (:timestamp message) since)) @messages))
 
   (storage-add-message
    [this message]
@@ -26,6 +30,12 @@
    [this]
    (walk/keywordize-keys (client ["select" "messages"
                                   {"order" ["id", "desc"]}])))
+
+  (storage-get-messages
+   [this since]
+   (walk/keywordize-keys (client ["select" "messages"
+                                  {"where" [">" :timestamp since]
+                                   "order" ["id", "desc"]}])))
 
   (storage-add-message
    [this message]
@@ -48,8 +58,11 @@
 
 (def ^{:private true} storage (make-storage))
 
-(defn get-messages []
-  (storage-get-messages storage))
+(defn get-messages
+  ([]
+     (storage-get-messages storage))
+  ([since]
+     (storage-get-messages storage since)))
 
 (defn add-message [message]
   (storage-add-message storage message))

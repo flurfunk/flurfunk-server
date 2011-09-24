@@ -27,3 +27,8 @@
   (is (= "felix" (:author (first (get-messages)))))
   (add-message {:author "thomas" :timestamp 1338 :body "second"})
   (is (= "thomas" (:author (first (get-messages))))))
+
+(deftest test-messages-since
+  (add-message {:author "felix" :timestamp 10337 :body "first"})
+  (add-message {:author "thomas" :timestamp 10338 :body "second"})
+  (is (= 1 (count (get-messages 10337)))))

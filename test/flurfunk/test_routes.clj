@@ -11,12 +11,12 @@
 (defn http-get [resource & params]
   (main-routes {:request-method :get :uri resource :params (first params)}))
 
-(defn http-get-string [resource]
-  (:body (http-get resource)))
+(defn http-get-string [resource & params]
+  (:body (apply http-get resource params)))
 
-(defn http-get-xml [resource]
+(defn http-get-xml [resource & params]
   (xml/parse (io/input-stream (streams/to-byte-array
-                               (http-get-string resource)))))
+                               (apply http-get-string resource params)))))
 
 (deftest test-index-page
   (let [response (http-get-string "/")]
@@ -42,6 +42,22 @@
            "1337" :id
            "thomas" :author
            10001 :timestamp))))
+
+(deftest test-get-messages-since
+  (binding [storage/get-messages
+            (fn ([])
+              ([since] (if (= since 1000000000000)
+                         [{:body "foo" :id "1337" :author "thomas"
+                           :timestamp 1000000000001}])))]
+    (let [messages (ms/unmarshal-messages
+                    (http-get-xml "/messages" {:since "1000000000000"}))
+          message (first messages)]
+      (is (= (count messages) 1))
+      (are [v k] (= v (k message))
+           "foo" :body
+           "1337" :id
+           "thomas" :author
+           1000000000001 :timestamp))))
 
 (deftest test-get-message-not-found
   (binding [storage/find-message (fn [id] nil)]

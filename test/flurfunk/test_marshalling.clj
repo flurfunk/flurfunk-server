@@ -15,8 +15,9 @@
                              :body "foobar"}]))))
 
 (deftest test-unmarshal-message
-  (is (= {:id "1" :author "felix" :timestamp 1337 :body "foobar"}
-         (unmarshal-message {:attrs {:id "1" :author "felix" :timestamp "1337"}
+  (is (= {:id "1" :author "felix" :timestamp 1000000000001 :body "foobar"}
+         (unmarshal-message {:attrs {:id "1" :author "felix"
+                                     :timestamp "1000000000001"}
                              :content ["foobar"]}))))
 
 (deftest test-unmarshal-message-without-id-and-timestamp
