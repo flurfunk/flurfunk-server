@@ -29,13 +29,13 @@
   (storage-get-messages
    [this]
    (walk/keywordize-keys (client ["select" "messages"
-                                  {"order" ["id", "desc"]}])))
+                                  {"order" ["timestamp", "desc"]}])))
 
   (storage-get-messages
    [this since]
    (walk/keywordize-keys (client ["select" "messages"
                                   {"where" [">" :timestamp since]
-                                   "order" ["id", "desc"]}])))
+                                   "order" ["timestamp", "desc"]}])))
 
   (storage-add-message
    [this message]
