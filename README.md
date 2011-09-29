@@ -46,7 +46,7 @@ Adding the web frontend
 Running the server
 ------------------
 
-    lein ring server 
+    lein ring server 8080 
 
 Creating a WAR
 --------------
