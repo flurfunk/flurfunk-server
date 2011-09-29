@@ -2,7 +2,7 @@ Flurfunk server
 ===============
 
 The Flurfunk server is written in Clojure, and built using Leiningen.
-It provides a REST API for use by clients and delivers the web frontend.
+It provides a REST API for use by clients.
 
 Installing Leiningen
 --------------------
@@ -52,7 +52,7 @@ Creating a WAR
 --------------
 
     mkdir temp
-    lein ring uberwar temp/flurfunk.war
+    lein ring uberwar temp/flurfunk-server.war
 
 Using a persistent database
 ---------------------------

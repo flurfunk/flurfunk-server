@@ -13,14 +13,6 @@
     (ms/unmarshal-message (ms/parse-xml s)))
 
 (defroutes main-routes
-  (GET "/" {context :context} (html
-               [:head
-                [:meta {:charset "utf-8"}]
-                [:title "Flurfunk"]
-                [:link {:rel "stylesheet" :type "text/css"
-                        :href (str context "/flurfunk.css")}]]
-               [:body
-                [:script {:src (str context "/flurfunk.js")}]]))
   (GET "/messages" {params :params}
        (ms/marshal-messages
         (if-let [since (:since params)]
