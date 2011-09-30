@@ -46,10 +46,25 @@ Adding the web frontend
 Running the server
 ------------------
 
-    lein ring server-headless 8080 
+    lein ring server-headless
+
+Testing together with the web frontend
+--------------------------------------
+
+    cd ..
+    git clone git@viaboxxsystems.de:flurfunk/flurfunk-web.git
+    cd flurfunk-web
+    make war
+    unzip flurfunk-web.war -d ../flurfunk-server/resources/public
+    cd ../flurfunk-server
+    lein ring server-headless
+
+Then go to http://localhost:3000/index.html.
 
 Creating a WAR
 --------------
+
+Remember to remove the resources copied from the web frontend before building a WAR.
 
     mkdir temp
     lein ring uberwar temp/flurfunk-server.war
@@ -71,4 +86,4 @@ where flurfunk.fdb is a pure text file where stuff will be stored.
 
 Finally, run the server like this:
 
-    JAVA_OPTS="-Dflurfunk.fleetdb=true" lein ring server-headless 8080
+    JAVA_OPTS="-Dflurfunk.fleetdb=true" lein ring server-headless
