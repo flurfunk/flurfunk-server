@@ -18,12 +18,6 @@
   (xml/parse (io/input-stream (streams/to-byte-array
                                (apply http-get-string resource params)))))
 
-(deftest test-index-page
-  (let [response (http-get-string "/")]
-    (are [s] (string/substring? s response)
-         "flurfunk.js"
-         "flurfunk.css")))
-         
 (deftest test-get-messages-successful
   (is (= 200 (:status (http-get "/messages")))))
 
