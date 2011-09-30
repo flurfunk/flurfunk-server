@@ -46,7 +46,7 @@ Adding the web frontend
 Running the server
 ------------------
 
-    lein ring server 8080 
+    lein ring server-headless 8080 
 
 Creating a WAR
 --------------
@@ -71,4 +71,4 @@ where flurfunk.fdb is a pure text file where stuff will be stored.
 
 Finally, run the server like this:
 
-    JAVA_OPTS="-Dflurfunk.fleetdb=true" lein ring server
+    JAVA_OPTS="-Dflurfunk.fleetdb=true" lein ring server-headless 8080
