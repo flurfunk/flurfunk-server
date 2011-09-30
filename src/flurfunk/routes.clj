@@ -1,9 +1,7 @@
 (ns flurfunk.routes
   "The routes of Flurfunk."
   (:use compojure.core
-        ring.util.servlet
-        hiccup.core
-        [hiccup.middleware :only (wrap-base-url)])
+        ring.util.servlet)
   (:require [compojure.route :as route]
             [compojure.handler :as handler]
             [flurfunk.marshalling :as ms]
@@ -13,6 +11,10 @@
     (ms/unmarshal-message (ms/parse-xml s)))
 
 (defroutes main-routes
+  (GET "/" {uri :uri}
+       {:status 302 :headers {"Location" (str uri
+                                              (if (not (.endsWith uri "/")) "/")
+                                              "index.html")}})
   (GET "/messages" {params :params}
        (ms/marshal-messages
         (if-let [since (:since params)]
@@ -31,5 +33,4 @@
   (route/not-found "Page not found"))
 
 (def app
-     (-> (handler/site main-routes)
-         (wrap-base-url)))
+     (handler/site main-routes))

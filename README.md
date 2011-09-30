@@ -57,9 +57,7 @@ Testing together with the web frontend
     make war
     unzip flurfunk-web.war -d ../flurfunk-server/resources/public
     cd ../flurfunk-server
-    lein ring server-headless
-
-Then go to http://localhost:3000/index.html.
+    lein ring server
 
 Creating a WAR
 --------------

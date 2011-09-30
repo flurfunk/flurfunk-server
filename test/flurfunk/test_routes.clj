@@ -18,6 +18,11 @@
   (xml/parse (io/input-stream (streams/to-byte-array
                                (apply http-get-string resource params)))))
 
+(deftest test-slash-redirects-to-index
+  (let [response (http-get "/")]
+    (is (= 302 (:status response)))
+    (is (= "/index.html" (get (:headers response) "Location")))))
+
 (deftest test-get-messages-successful
   (is (= 200 (:status (http-get "/messages")))))
 
