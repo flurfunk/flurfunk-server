@@ -78,9 +78,6 @@ After completing the above step of creating a WAR, you can deploy it to Nexus li
                        -DrepositoryId=viaboxx-snapshots \
                        -Dfile=temp/flurfunk-server.war \
                        -DpomFile=temp/pom.xml \
-                       -DgroupId=de.viaboxx.flurfunk \
-                       -DartifactId=flurfunk-server \
-                       -Dversion=1.0-SNAPSHOT \
                        -Dpackaging=war 
 
 TODO: Document how to do a release (hint, like the above, but with releases instead of snapshots, and a real version).
