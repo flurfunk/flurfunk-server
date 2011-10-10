@@ -72,9 +72,12 @@ Deploying WAR to Nexus
 
 After completing the above step of creating a WAR, you can deploy it to Nexus like this:
 
+    lein pom temp/pom.xml
+
     mvn deploy:deploy-file -Durl=https://server/nexus/content/repositories/snapshots/ \
-                       -DrepositoryId=snapshots-repo \
+                       -DrepositoryId=viaboxx-snapshots \
                        -Dfile=temp/flurfunk-server.war \
+                       -DpomFile=temp/pom.xml \
                        -DgroupId=de.viaboxx.flurfunk \
                        -DartifactId=flurfunk-server \
                        -Dversion=1.0-SNAPSHOT \
