@@ -82,6 +82,14 @@ After completing the above step of creating a WAR, you can deploy it to Nexus li
 
 TODO: Document how to do a release (hint, like the above, but with releases instead of snapshots, and a real version).
 
+Downloading WAR from Nexus
+--------------
+
+After deploying to Nexus, you might want to download the WAR to a server where it can be deployed into a container:
+
+wget -O flurfunk-server.war --user=jenkins-artifacts --password=PASSWORD \
+        'https://www.viaboxxsystems.de/nexus/service/local/artifact/maven/redirect?r=snapshots&g=de.viaboxx.flurfunk&a=flurfunk-server&v=0.1.0-SNAPSHOT&e=war'
+
 Using a persistent database
 ---------------------------
 
