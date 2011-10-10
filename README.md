@@ -34,15 +34,6 @@ Running the tests
 
     lein test
 
-Adding the web frontend
------------------------
-
-    cd ..
-    git clone git@viaboxxsystems.de:flurfunk/flurfunk-web.git
-    cd flurfunk-web
-    make
-    cp flurfunk.js flurfunk.css ../flurfunk-server/resources/public
-
 Running the server
 ------------------
 
@@ -62,7 +53,8 @@ Testing together with the web frontend
 Creating a WAR
 --------------
 
-Remember to remove the resources copied from the web frontend before building a WAR.
+Remember to remove the resources copied from the web frontend before building a
+WAR.
 
     mkdir temp
     lein ring uberwar temp/flurfunk-server.war
@@ -70,7 +62,8 @@ Remember to remove the resources copied from the web frontend before building a 
 Deploying WAR to Nexus
 --------------
 
-After completing the above step of creating a WAR, you can deploy it to Nexus like this:
+After completing the above step of creating a WAR, you can deploy it to Nexus
+like this:
 
     lein pom temp/pom.xml
 
@@ -80,20 +73,23 @@ After completing the above step of creating a WAR, you can deploy it to Nexus li
                        -DpomFile=temp/pom.xml \
                        -Dpackaging=war 
 
-TODO: Document how to do a release (hint, like the above, but with releases instead of snapshots, and a real version).
+TODO: Document how to do a release (hint, like the above, but with releases
+instead of snapshots, and a real version).
 
 Downloading WAR from Nexus
 --------------
 
-After deploying to Nexus, you might want to download the WAR to a server where it can be deployed into a container:
+After deploying to Nexus, you might want to download the WAR to a server where
+it can be deployed into a container:
 
-wget -O flurfunk-server.war --user=jenkins-artifacts --password=PASSWORD \
-        'https://www.viaboxxsystems.de/nexus/service/local/artifact/maven/redirect?r=snapshots&g=de.viaboxx.flurfunk&a=flurfunk-server&v=0.1.0-SNAPSHOT&e=war'
+    wget -O flurfunk-server.war --user=jenkins-artifacts --password=PASSWORD \
+        'https://server/nexus/service/local/artifact/maven/redirect?r=snapshots&g=de.viaboxx.flurfunk&a=flurfunk-server&v=0.1.0-SNAPSHOT&e=war'
 
 Using a persistent database
 ---------------------------
 
-Messages are per default stored in memory. For a persistent database, install fleetdb:
+Messages are per default stored in memory. For a persistent database, install
+fleetdb:
 
     mkdir temp
     cd temp
