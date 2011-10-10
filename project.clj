@@ -8,7 +8,6 @@
   :ring {:handler flurfunk.routes/app}
   :omit-default-repositories true
   :repositories {
-      "viaboxx-nexus" {:url "https://www.viaboxxsystems.de/nexus/content/groups/public/"}
-      "viaboxx-releases" {:url "https://www.viaboxxsystems.de/nexus/content/repositories/releases/"}
-      "viaboxx-snapshots" {:url "https://www.viaboxxsystems.de/nexus/content/repositories/snapshots/"}}
-)
+      "snapshots" {:url "https://server/nexus/content/groups/public/"}
+      "releases" {:url "https://server/nexus/content/groups/public/"}
+})
