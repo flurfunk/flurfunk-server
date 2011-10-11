@@ -97,7 +97,7 @@ fleetdb:
 
 Then launch the fleetdb server:
 
-    java -server -Xmx2g -cp fleetdb-standalone.jar fleetdb.server -f flurfunk.fdb
+    scripts/fleetdb-flurfunk
 
 where flurfunk.fdb is a pure text file where stuff will be stored.
 

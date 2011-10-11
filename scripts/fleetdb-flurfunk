@@ -1,0 +1,1 @@
+nohup java -server -Xmx2g -cp temp/fleetdb-standalone.jar fleetdb.server -f temp/flurfunk.fdb
