@@ -23,7 +23,7 @@ Running the REPL
     
 In the REPL, import the namespace as follows (necessary after each code change):
     
-    (require '[flurfunk.routes :as routes] :reload)
+>    (require '[flurfunk.routes :as routes] :reload)
 
 Then you can call functions like this:
 
