@@ -45,7 +45,7 @@ Testing together with the web frontend
     cd ..
     git clone git@viaboxxsystems.de:flurfunk/flurfunk-web.git
     cd flurfunk-web
-    make war
+    lein cljs war
     unzip flurfunk-web.war -d ../flurfunk-server/resources/public
     cd ../flurfunk-server
     lein ring server
