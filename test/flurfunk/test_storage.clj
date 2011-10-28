@@ -32,3 +32,8 @@
   (add-message {:author "felix" :timestamp 10337 :body "first"})
   (add-message {:author "thomas" :timestamp 10338 :body "second"})
   (is (= 1 (count (get-messages 10337)))))
+
+
+(deftest limit-messages
+  (dotimes [n 300] (add-message {:author "felix" :timestamp 1337 :body (str "n is " n)}))
+  (is (= 200 (count (get-messages)))))

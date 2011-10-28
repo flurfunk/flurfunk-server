@@ -3,13 +3,15 @@
   (:require [fleetdb.client :as db]
 	    [clojure.walk :as walk]))
 
+(def message-limit 200)
+
 (defprotocol Storage
   (storage-get-messages [this] [this since])
   (storage-add-message [this message])
   (storage-find-message [this id]))
 
 (deftype MemoryStorage [messages] Storage
-  (storage-get-messages [this] @messages)
+  (storage-get-messages [this] (take message-limit @messages))
 
   (storage-get-messages
    [this since]
@@ -29,13 +31,15 @@
   (storage-get-messages
    [this]
    (walk/keywordize-keys (client ["select" "messages"
-                                  {"order" ["timestamp", "desc"]}])))
+                                  {"order" ["timestamp", "desc"]
+                                   "limit" message-limit}])))
 
   (storage-get-messages
    [this since]
    (walk/keywordize-keys (client ["select" "messages"
                                   {"where" [">" :timestamp since]
-                                   "order" ["timestamp", "desc"]}])))
+                                   "order" ["timestamp", "desc"]
+                                   "limit" message-limit}])))
 
   (storage-add-message
    [this message]
