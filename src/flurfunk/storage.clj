@@ -15,7 +15,7 @@
 
   (storage-get-messages
    [this since]
-   (filter (fn [message] (> (:timestamp message) since)) @messages))
+   (take message-limit (filter (fn [message] (> (:timestamp message) since)) @messages)))
 
   (storage-add-message
    [this message]
