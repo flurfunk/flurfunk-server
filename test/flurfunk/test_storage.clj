@@ -35,14 +35,13 @@
   (clear-messages)
   (add-message {:author "felix" :timestamp 10337 :body "first"})
   (add-message {:author "thomas" :timestamp 10338 :body "second"})
-  (is (= 1 (count (get-messages 10337)))))
+  (is (= 1 (count (get-messages {:since 10337})))))
 
 (deftest test-messages-before
   (clear-messages)
   (add-message {:author "felix" :timestamp 10337 :body "first"})
   (add-message {:author "thomas" :timestamp 10338 :body "second"})
-  (is (= 1 (count (get-messages-before 10338)))))
-
+  (is (= 1 (count (get-messages {:before 10338})))))
 
 (deftest limit-messages
   (dotimes [n 300] (add-message {:author "felix" :timestamp 1337 :body (str "n is " n)}))

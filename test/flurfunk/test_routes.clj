@@ -45,7 +45,7 @@
 (deftest test-get-messages-since
   (binding [storage/get-messages
             (fn ([])
-              ([since] (if (= since 1000000000000)
+              ([options] (if (= (:since options) 1000000000000)
                          [{:body "foo" :id "1337" :author "thomas"
                            :timestamp 1000000000001}])))]
     (let [messages (ms/unmarshal-messages

@@ -6,24 +6,30 @@
 (def message-limit 200)
 
 (defprotocol Storage
-  (storage-get-messages [this] [this since])
-  (storage-get-messages-before [this] [this before])
-  (storage-get-messages-after [this] [this after])
+  (storage-get-messages [this] [this options])
   (storage-add-message [this message])
   (storage-find-message [this id])
   (storage-clear-messages [this]))
+
+(defn- predicate-for-option [option value]
+  (case option
+	:before (fn [message] (< (:timestamp message) value))
+	:since (fn [message] (> (:timestamp message) value))))
+
+(defn- predicate-for-options [options]
+  (let [predicates (map (fn [option]
+			  (predicate-for-option (first option) (second option)))
+			options)]
+    (fn [message]
+      (every? (fn [predicate] (predicate message)) predicates))))
 
 (deftype MemoryStorage [messages] Storage
   (storage-get-messages [this] (take message-limit @messages))
 
   (storage-get-messages
-   [this since]
-   (take message-limit (filter (fn [message] (> (:timestamp message) since)) @messages)))
+   [this options]
+     (take message-limit (filter (predicate-for-options options) @messages)))
 
-  (storage-get-messages-before
-   [this before]
-   (filter (fn [message] (< (:timestamp message) before)) @messages))
-  
   (storage-add-message
    [this message]
    (let [message-with-id (conj message {:id (str (count @messages))})]
@@ -42,21 +48,15 @@
   (storage-get-messages
    [this]
    (walk/keywordize-keys (client ["select" "messages"
-                                  {"order" ["timestamp", "desc"]
-                                   "limit" message-limit}])))
-
+				  {"order" ["timestamp", "desc"]
+				   "limit" message-limit}])))
+  
   (storage-get-messages
-   [this since]
-   (walk/keywordize-keys (client ["select" "messages"
-                                  {"where" [">" :timestamp since]
-                                   "order" ["timestamp", "desc"]
-                                   "limit" message-limit}])))
-  (storage-get-messages-before
-   [this before]
-   (walk/keywordize-keys (client ["select" "messages"
-                                  {"where" ["<" :timestamp before]
-                                   "order" ["timestamp", "desc"]
-                                   "limit" message-limit}])))
+   [this options]
+   (filter (predicate-for-options options) ;;TODO: Filter in SQL statement
+	   (walk/keywordize-keys (client ["select" "messages"
+					  {"order" ["timestamp", "desc"]
+					   "limit" message-limit}]))))
   
   (storage-add-message
    [this message]
@@ -86,18 +86,8 @@
 (defn get-messages
   ([]
      (storage-get-messages storage))
-  ([since]
-     (storage-get-messages storage since)))
-
-(defn get-messages-before
-  ([before]
-     (storage-get-messages-before storage before)))
-
-(defn get-messages-after
-  ([before]
-     ;;Note that we just use the overridden messages-since form here.TODO: Replace the override.
-     (storage-get-messages storage before)))
-          
+  ([options]
+     (storage-get-messages storage options)))
 
 (defn add-message [message]
   (storage-add-message storage message))

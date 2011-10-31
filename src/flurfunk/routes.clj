@@ -19,7 +19,7 @@
        (ms/marshal-messages
         (if-let [since (:since params)]
           (do
-            (storage/get-messages (Long. since)))
+            (storage/get-messages {:since (Long. since)}))
           (storage/get-messages))))
   (GET "/message/:id" [id]
        (if-let [message (storage/find-message id)]
