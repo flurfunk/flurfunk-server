@@ -8,7 +8,8 @@
 (defprotocol Storage
   (storage-get-messages [this] [this since])
   (storage-add-message [this message])
-  (storage-find-message [this id]))
+  (storage-find-message [this id])
+  (storage-clear-messages [this]))
 
 (deftype MemoryStorage [messages] Storage
   (storage-get-messages [this] (take message-limit @messages))
@@ -25,7 +26,11 @@
 
   (storage-find-message
    [this id]
-   (first (filter (fn [message] (= id (:id message))) @messages))))
+   (first (filter (fn [message] (= id (:id message))) @messages)))
+
+  (storage-clear-messages
+   [this]
+   (swap! messages (fn [messages] '()))))
 
 (deftype FleetDBStorage [client] Storage
   (storage-get-messages
@@ -50,7 +55,11 @@
   (storage-find-message
    [this id]
    (walk/keywordize-keys (first (client ["select" "messages"
-                                         {"where" ["=" :id id]}])))))
+                                         {"where" ["=" :id id]}]))))
+
+  (storage-clear-messages
+   [this]
+   (client ["delete", "messages"])))
 
 (defn- make-storage []
   (if (= (System/getProperty "flurfunk.fleetdb") "true")
@@ -73,3 +82,6 @@
 
 (defn find-message [id]
   (storage-find-message storage id))
+
+(defn clear-messages []
+  (storage-clear-messages storage))
