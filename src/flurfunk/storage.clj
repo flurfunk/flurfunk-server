@@ -7,6 +7,8 @@
 
 (defprotocol Storage
   (storage-get-messages [this] [this since])
+  (storage-get-messages-before [this] [this before])
+  (storage-get-messages-after [this] [this after])
   (storage-add-message [this message])
   (storage-find-message [this id])
   (storage-clear-messages [this]))
@@ -18,6 +20,10 @@
    [this since]
    (take message-limit (filter (fn [message] (> (:timestamp message) since)) @messages)))
 
+  (storage-get-messages-before
+   [this before]
+   (filter (fn [message] (< (:timestamp message) before)) @messages))
+  
   (storage-add-message
    [this message]
    (let [message-with-id (conj message {:id (str (count @messages))})]
@@ -45,7 +51,13 @@
                                   {"where" [">" :timestamp since]
                                    "order" ["timestamp", "desc"]
                                    "limit" message-limit}])))
-
+  (storage-get-messages-before
+   [this before]
+   (walk/keywordize-keys (client ["select" "messages"
+                                  {"where" ["<" :timestamp before]
+                                   "order" ["timestamp", "desc"]
+                                   "limit" message-limit}])))
+  
   (storage-add-message
    [this message]
    (let [message-with-id
@@ -76,6 +88,16 @@
      (storage-get-messages storage))
   ([since]
      (storage-get-messages storage since)))
+
+(defn get-messages-before
+  ([before]
+     (storage-get-messages-before storage before)))
+
+(defn get-messages-after
+  ([before]
+     ;;Note that we just use the overridden messages-since form here.TODO: Replace the override.
+     (storage-get-messages storage before)))
+          
 
 (defn add-message [message]
   (storage-add-message storage message))
