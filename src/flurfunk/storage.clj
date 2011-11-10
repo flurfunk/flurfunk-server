@@ -11,6 +11,9 @@
   (storage-find-message [this id])
   (storage-clear-messages [this]))
 
+(defn- generate-message-id []
+  (str (java.util.UUID/randomUUID )))
+
 (defn- predicate-for-option [option value]
   (case option
 	:before (fn [message] (< (:timestamp message) value))
@@ -32,7 +35,7 @@
 
   (storage-add-message
    [this message]
-   (let [message-with-id (conj message {:id (str (count @messages))})]
+   (let [message-with-id (conj message {:id (str (generate-message-id))})]
      (swap! messages (fn [messages]
                        (cons message-with-id messages)))))
 
@@ -61,7 +64,7 @@
   (storage-add-message
    [this message]
    (let [message-with-id
-         (conj message {:id (str (client ["count" "messages"]))})]
+         (conj message {:id (generate-message-id)})]
      (client ["insert" "messages" message-with-id])))
 
   (storage-find-message
