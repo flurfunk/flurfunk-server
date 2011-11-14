@@ -3,3 +3,4 @@
 /.lein-failures
 /temp
 /nohup.out
+/.dir-locals.el
