@@ -1,6 +1,6 @@
-(ns flurfunk.test-marshalling
+(ns flurfunk-server.test-marshalling
   (:use clojure.test
-        flurfunk.marshalling))
+        flurfunk-server.marshalling))
 
 (deftest test-marshal-message
   (is (= "<message id='1' author='felix' timestamp='1337'>foobar</message>"

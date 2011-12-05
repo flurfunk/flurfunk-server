@@ -1,6 +1,6 @@
-(ns flurfunk.test-storage
+(ns flurfunk-server.test-storage
   (:use clojure.test
-        flurfunk.storage))
+        flurfunk-server.storage))
 
 (deftest test-add-and-get-message
   (clear-messages)

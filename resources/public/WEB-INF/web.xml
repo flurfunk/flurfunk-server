@@ -7,7 +7,7 @@
     <display-name>Flurfunk</display-name>
     <servlet>
         <servlet-name>core</servlet-name>
-        <servlet-class>flurfunk.core</servlet-class>
+        <servlet-class>flurfunk_server.core</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>core</servlet-name>

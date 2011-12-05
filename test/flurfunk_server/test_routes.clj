@@ -1,12 +1,12 @@
-(ns flurfunk.test-routes
+(ns flurfunk-server.test-routes
   (:use clojure.test
-        flurfunk.routes)
+        flurfunk-server.routes)
   (:require [clojure.xml :as xml]
             [clojure.contrib.duck-streams :as streams]
             [clojure.contrib.io :as io]
             [clojure.contrib.string :as string]
-            [flurfunk.marshalling :as ms]
-            [flurfunk.storage :as storage]))
+            [flurfunk-server.marshalling :as ms]
+            [flurfunk-server.storage :as storage]))
 
 (defn http-get [resource & params]
   (main-routes {:request-method :get :uri resource :params (first params)}))

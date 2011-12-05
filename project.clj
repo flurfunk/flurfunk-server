@@ -5,7 +5,7 @@
                  [compojure/compojure "0.6.5"]
                  [fleetdb-client "0.2.2"]]
   :dev-dependencies [[lein-ring "0.4.5"]]
-  :ring {:handler flurfunk.routes/app}
+  :ring {:handler flurfunk-server.routes/app}
   :repositories
   {"releases"
    {:url "https://server/nexus/content/groups/public/"}
