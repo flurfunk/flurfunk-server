@@ -59,6 +59,17 @@ WAR.
     mkdir temp
     lein ring uberwar temp/flurfunk-server.war
 
+Creating a standalone JAR that includes Jetty
+---------------------------------------------
+
+    lein uberjar
+    mv flurfunk-server-*-standalone.jar temp/flurfunk-server.jar
+
+Running from the standalone JAR
+-------------------------------
+
+    java -jar temp/flurfunk-server.jar -Dflurfunk.port=8080
+
 Deploying WAR to Nexus
 --------------
 
