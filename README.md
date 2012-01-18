@@ -11,8 +11,14 @@ Installing Leiningen
     chmod +x lein
     mv lein ~/bin/ # Make sure that ~/bin/ exists and is on the $PATH
 
+Install access to viaboxx nexus
+-------------------------------
+    cd viaboxx-parents # checked out from git
+    ant install-lein
+
 Downloading the dependencies
 ----------------------------
+    cd flurfunk-server # checked out from git
 
     lein deps
 
