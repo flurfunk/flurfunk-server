@@ -16,7 +16,7 @@
 
 (defn -main [& args]
   (let [port (get-port)]
-    (try (run-jetty flurfunk-app {:port (Integer. port)})
+    (try (run-jetty flurfunk-server {:port (Integer. port)})
          (catch NumberFormatException e
            (println (str "Invalid port number: '" port "'"))
            (System/exit 1)))))
