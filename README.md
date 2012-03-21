@@ -13,13 +13,14 @@ Installing Leiningen
 
 Install access to viaboxx nexus
 -------------------------------
+
     cd viaboxx-parents # checked out from git
     ant install-lein
 
 Downloading the dependencies
 ----------------------------
-    cd flurfunk-server # checked out from git
 
+    cd flurfunk-server # checked out from git
     lein deps
 
 Running the REPL
@@ -29,7 +30,7 @@ Running the REPL
     
 In the REPL, import the namespace as follows (necessary after each code change):
     
->    (require '[flurfunk-server.routes :as routes] :reload)
+    (require '[flurfunk-server.routes :as routes] :reload)
 
 Then you can call functions like this:
 
@@ -48,12 +49,9 @@ Running the server
 Testing together with the web frontend
 --------------------------------------
 
-    cd ..
-    git clone git@viaboxxsystems.de:flurfunk/flurfunk-web.git
-    cd flurfunk-web
-    lein cljs war
-    unzip flurfunk-web.war -d ../flurfunk-server/resources/public
-    cd ../flurfunk-server
+    lein ring server
+    cd ../flurfunk-web # checked out from git
+    lein cljs compile
     lein ring server
 
 Creating a WAR
