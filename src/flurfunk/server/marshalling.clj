@@ -3,8 +3,9 @@
   (:require [clojure.xml :as xml]
             [clojure.java.io :as io]))
 
-(defn parse-xml [string]
-  (xml/parse (io/input-stream (.getBytes string))))
+(defn parse-xml [input]
+  (xml/parse (io/input-stream (if (instance? String input)
+                                (.getBytes input) input))))
 
 ;; TODO: The marshal methods should return an XML object (no string).
 
