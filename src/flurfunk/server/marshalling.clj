@@ -1,4 +1,4 @@
-(ns flurfunk-server.marshalling
+(ns flurfunk.server.marshalling
   "Marshalling and unmarshalling of XML objects."
   (:require [clojure.xml :as xml]
             [clojure.java.io :as io]))

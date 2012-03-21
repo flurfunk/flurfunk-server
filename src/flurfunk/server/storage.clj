@@ -1,4 +1,4 @@
-(ns flurfunk-server.storage
+(ns flurfunk.server.storage
   "Storage and retrieval of objects."
   (:require [fleetdb.client :as db]
 	    [clojure.walk :as walk]))

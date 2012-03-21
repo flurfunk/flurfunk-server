@@ -1,7 +1,7 @@
-(ns flurfunk-server.jetty
+(ns flurfunk.server.jetty
   "Runs Flurfunk in Jetty"
   (:use ring.adapter.jetty
-        flurfunk-server.routes)
+        flurfunk.server.routes)
   (:gen-class))
 
 (def default-port 8080)

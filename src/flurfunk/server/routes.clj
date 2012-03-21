@@ -1,12 +1,12 @@
-(ns flurfunk-server.routes
+(ns flurfunk.server.routes
   "The routes of Flurfunk."
   (:use compojure.core
         ring.util.servlet)
   (:require [compojure.route :as route]
             [compojure.handler :as handler]
             [ring.util.response :as response]
-            [flurfunk-server.marshalling :as ms]
-            [flurfunk-server.storage :as storage]))
+            [flurfunk.server.marshalling :as ms]
+            [flurfunk.server.storage :as storage]))
 
 (defn- parse-message [s]
     (ms/unmarshal-message (ms/parse-xml s)))

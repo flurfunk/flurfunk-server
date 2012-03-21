@@ -1,8 +1,8 @@
-(ns flurfunk-server.test-routes
+(ns flurfunk.server.test-routes
   (:use clojure.test
-        flurfunk-server.routes)
-  (:require [flurfunk-server.marshalling :as ms]
-            [flurfunk-server.storage :as storage]))
+        flurfunk.server.routes)
+  (:require [flurfunk.server.marshalling :as ms]
+            [flurfunk.server.storage :as storage]))
 
 (defn http-get [resource & params]
   (main-routes {:request-method :get :uri resource :params (first params)}))
