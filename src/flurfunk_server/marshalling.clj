@@ -1,11 +1,10 @@
 (ns flurfunk-server.marshalling
   "Marshalling and unmarshalling of XML objects."
   (:require [clojure.xml :as xml]
-            [clojure.contrib.duck-streams :as streams]
-            [clojure.contrib.io :as io]))
+            [clojure.java.io :as io]))
 
 (defn parse-xml [string]
-  (xml/parse (io/input-stream (streams/to-byte-array string))))
+  (xml/parse (io/input-stream (.getBytes string))))
 
 ;; TODO: The marshal methods should return an XML object (no string).
 

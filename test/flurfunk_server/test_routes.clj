@@ -1,11 +1,7 @@
 (ns flurfunk-server.test-routes
   (:use clojure.test
         flurfunk-server.routes)
-  (:require [clojure.xml :as xml]
-            [clojure.contrib.duck-streams :as streams]
-            [clojure.contrib.io :as io]
-            [clojure.contrib.string :as string]
-            [flurfunk-server.marshalling :as ms]
+  (:require [flurfunk-server.marshalling :as ms]
             [flurfunk-server.storage :as storage]))
 
 (defn http-get [resource & params]
@@ -15,8 +11,7 @@
   (:body (apply http-get resource params)))
 
 (defn http-get-xml [resource & params]
-  (xml/parse (io/input-stream (streams/to-byte-array
-                               (apply http-get-string resource params)))))
+  (ms/parse-xml (apply http-get-string resource params)))
 
 (deftest test-slash-redirects-to-index
   (let [response (http-get "/")]
@@ -27,13 +22,15 @@
   (is (= 200 (:status (http-get "/messages")))))
 
 (deftest test-get-messages-empty
-  (binding [storage/get-messages (fn [] [])]
+  (with-redefs [storage/get-messages (fn [] [])]
     (is (empty? (ms/unmarshal-messages (http-get-xml "/messages"))))))
 
 (deftest test-get-messages
-  (binding [storage/get-messages
-            (fn [] [{:body "foo" :id "1337" :author "thomas" :timestamp 10001}
-                    {:body "" :id "2448" :author "felix" :timestamp 10002}])]
+  (with-redefs [storage/get-messages
+                (fn [] [{:body "foo" :id "1337" :author "thomas"
+                         :timestamp 10001}
+                        {:body "" :id "2448" :author "felix"
+                         :timestamp 10002}])]
     (let [messages (ms/unmarshal-messages (http-get-xml "/messages"))
           message (first messages)]
       (are [v k] (= v (k message))
@@ -43,11 +40,11 @@
            10001 :timestamp))))
 
 (deftest test-get-messages-since
-  (binding [storage/get-messages
-            (fn ([])
-              ([options] (if (= (:since options) 1000000000000)
-                         [{:body "foo" :id "1337" :author "thomas"
-                           :timestamp 1000000000001}])))]
+  (with-redefs [storage/get-messages
+                (fn ([])
+                  ([options] (if (= (:since options) 1000000000000)
+                               [{:body "foo" :id "1337" :author "thomas"
+                                 :timestamp 1000000000001}])))]
     (let [messages (ms/unmarshal-messages
                     (http-get-xml "/messages" {:since "1000000000000"}))
           message (first messages)]
@@ -59,18 +56,19 @@
            1000000000001 :timestamp))))
 
 (deftest test-get-message-not-found
-  (binding [storage/find-message (fn [id] nil)]
+  (with-redefs [storage/find-message (fn [id] nil)]
     (is (= 404
            (:status (http-get "/message/1337"))))))
 
 (deftest test-get-message-empty
-  (binding [storage/find-message (fn [id] {:body ""})]
+  (with-redefs [storage/find-message (fn [id] {:body ""})]
     (is (empty? 
          (:body (ms/unmarshal-message (http-get-xml "/message/2448")))))))
 
 (deftest test-get-message
-  (binding [storage/find-message
-            (fn [id] {:id "1337" :author "thomas" :timestamp 10001 :body "foo"})]
+  (with-redefs [storage/find-message
+                (fn [id] {:id "1337" :author "thomas" :timestamp 10001
+                          :body "foo"})]
     (let [message (ms/unmarshal-message (http-get-xml "/message/1337"))]
       (are [v k] (= v (k message))
            "foo" :body
@@ -79,14 +77,14 @@
            10001 :timestamp))))
 
 (deftest test-post-message-successful
-  (binding [storage/add-message (fn [message])]
+  (with-redefs [storage/add-message (fn [message])]
     (is (= 200
            (:status (main-routes {:request-method :post :uri "/message"
                                   :body "<message></message>"}))))))
 
 (deftest test-post-message
   (let [messages (transient [])]
-    (binding [storage/add-message (fn [message] (conj! messages message))]
+    (with-redefs [storage/add-message (fn [message] (conj! messages message))]
       (main-routes {:request-method :post :uri "/message"
                     :body "<message author='Felix'>foobar</message>"})
       (let [message (first (persistent! messages))]
