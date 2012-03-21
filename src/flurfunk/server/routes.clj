@@ -17,10 +17,10 @@
                                "index.html")))
   (GET "/messages" {params :params}
        (ms/marshal-messages
-        (if-let [since (:since params)]
-          (do
-            (storage/get-messages {:since (Long. since)}))
-          (storage/get-messages))))
+        (let [since (:since params)]
+          (if (and since (not (= since "NaN")))
+            (storage/get-messages {:since (Long. since)})
+            (storage/get-messages)))))
   (GET "/message/:id" [id]
        (if-let [message (storage/find-message id)]
          (ms/marshal-message message)
