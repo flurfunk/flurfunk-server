@@ -49,10 +49,13 @@ Running the server
 Testing together with the web frontend
 --------------------------------------
 
-    lein ring server
+    lein ring server 4000
     cd ../flurfunk-web # checked out from git
-    lein cljs compile
-    lein ring server
+    lein cljs compile-dev
+    lein ring server-headless
+
+Then go to http://localhost:3000/index-dev.html and enter
+http://localhost:4000 as the server URL.
 
 Creating a WAR
 --------------
@@ -75,7 +78,7 @@ Running from the standalone JAR
     java -jar temp/flurfunk-server.jar -Dflurfunk.port=8080
 
 Deploying WAR to Nexus
---------------
+----------------------
 
 After completing the above step of creating a WAR, you can deploy it to Nexus
 like this:
@@ -92,7 +95,7 @@ TODO: Document how to do a release (hint, like the above, but with releases
 instead of snapshots, and a real version).
 
 Downloading WAR from Nexus
---------------
+--------------------------
 
 After deploying to Nexus, you might want to download the WAR to a server where
 it can be deployed into a container:
