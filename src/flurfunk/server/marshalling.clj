@@ -5,7 +5,7 @@
 
 (defn parse-xml [input]
   (xml/parse (io/input-stream (if (instance? String input)
-                                (.getBytes input) input))))
+                                (.getBytes input "UTF-8") input))))
 
 ;; TODO: The marshal methods should return an XML object (no string).
 
