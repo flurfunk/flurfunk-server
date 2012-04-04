@@ -4,25 +4,24 @@ Flurfunk server
 The Flurfunk server is written in Clojure, and built using Leiningen.
 It provides a REST API for use by clients.
 
-Installing Leiningen 2
-----------------------
+Building and running
+--------------------
+
+### Installing Leiningen 2 ###
 
     curl -O https://raw.github.com/technomancy/leiningen/preview/bin/lein
     chmod +x lein
     mv lein ~/bin/ # Make sure that ~/bin/ exists and is on the $PATH
 
-Running the tests
------------------
+### Running the tests ###
 
     lein test
 
-Running the server
-------------------
+### Running the server ###
 
     lein ring server-headless
 
-Testing together with the web frontend
---------------------------------------
+### Testing together with the web frontend ###
 
     lein ring server 4000
     cd ../flurfunk-web # checked out from git
@@ -32,25 +31,21 @@ Testing together with the web frontend
 Then go to http://localhost:3000/index-dev.html and enter
 http://localhost:4000 as the server URL.
 
-Creating a WAR
---------------
+### Creating a WAR ###
 
     mkdir temp
     lein ring uberwar temp/flurfunk-server.war
 
-Creating a standalone JAR that includes Jetty
----------------------------------------------
+### Creating a standalone JAR that includes Jetty ###
 
     lein uberjar
     mv target/flurfunk-server-*-standalone.jar temp/flurfunk-server.jar
 
-Running the standalone JAR
---------------------------
+### Running the standalone JAR ###
 
     java -jar temp/flurfunk-server.jar -Dflurfunk.port=8080
 
-Deploying WAR to Nexus
-----------------------
+### Deploying WAR to Nexus ###
 
 After completing the above step of creating a WAR, you can deploy it to Nexus
 like this:
@@ -66,8 +61,7 @@ like this:
 TODO: Document how to do a release (hint, like the above, but with releases
 instead of snapshots, and a real version).
 
-Downloading WAR from Nexus
---------------------------
+### Downloading WAR from Nexus ###
 
 After deploying to Nexus, you might want to download the WAR to a server where
 it can be deployed into a container:
@@ -75,8 +69,7 @@ it can be deployed into a container:
     wget -O flurfunk-server.war --user=jenkins-artifacts --password=PASSWORD \
         'https://server/nexus/service/local/artifact/maven/redirect?r=snapshots&g=de.viaboxx.flurfunk&a=flurfunk-server&v=0.1.0-SNAPSHOT&e=war'
 
-Using a persistent database
----------------------------
+### Using a persistent database ###
 
 Messages are per default stored in memory. For a persistent database, install
 fleetdb:
