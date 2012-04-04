@@ -4,7 +4,7 @@
 /temp
 /nohup.out
 /.dir-locals.el
-/flurfunk-server-*.jar
+/target
 
 #Exclude IDEA generated fields:
 /.idea
