@@ -6,9 +6,4 @@
                  [ring/ring-jetty-adapter "0.3.11"]]
   :dev-dependencies [[lein-ring "0.4.5"]]
   :ring {:handler flurfunk.server.routes/flurfunk-server}
-  :main flurfunk.server.jetty
-  :repositories
-  {"releases"
-   {:url "https://server/nexus/content/groups/public/"}
-   "snapshots"
-   {:url "https://server/nexus/content/groups/public/"}})
+  :main flurfunk.server.jetty)
