@@ -4,37 +4,12 @@ Flurfunk server
 The Flurfunk server is written in Clojure, and built using Leiningen.
 It provides a REST API for use by clients.
 
-Installing Leiningen
---------------------
+Installing Leiningen 2
+----------------------
 
-    curl -O https://raw.github.com/technomancy/leiningen/stable/bin/lein
+    curl -O https://raw.github.com/technomancy/leiningen/preview/bin/lein
     chmod +x lein
     mv lein ~/bin/ # Make sure that ~/bin/ exists and is on the $PATH
-
-Install access to viaboxx nexus
--------------------------------
-
-    cd viaboxx-parents # checked out from git
-    ant install-lein
-
-Downloading the dependencies
-----------------------------
-
-    cd flurfunk-server # checked out from git
-    lein deps
-
-Running the REPL
-----------------
-
-    lein repl
-    
-In the REPL, import the namespace as follows (necessary after each code change):
-    
-    (require '[flurfunk-server.routes :as routes] :reload)
-
-Then you can call functions like this:
-
-    (routes/app)
 
 Running the tests
 -----------------
@@ -60,9 +35,6 @@ http://localhost:4000 as the server URL.
 Creating a WAR
 --------------
 
-Remember to remove the resources copied from the web frontend before building a
-WAR.
-
     mkdir temp
     lein ring uberwar temp/flurfunk-server.war
 
@@ -70,10 +42,10 @@ Creating a standalone JAR that includes Jetty
 ---------------------------------------------
 
     lein uberjar
-    mv flurfunk-server-*-standalone.jar temp/flurfunk-server.jar
+    mv target/flurfunk-server-*-standalone.jar temp/flurfunk-server.jar
 
-Running from the standalone JAR
--------------------------------
+Running the standalone JAR
+--------------------------
 
     java -jar temp/flurfunk-server.jar -Dflurfunk.port=8080
 
