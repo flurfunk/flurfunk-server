@@ -4,6 +4,6 @@
                  [compojure/compojure "0.6.5"]
                  [fleetdb-client "0.2.2"]
                  [ring/ring-jetty-adapter "0.3.11"]]
-  :dev-dependencies [[lein-ring "0.4.5"]]
+  :plugins [[lein-ring "0.6.3"]]
   :ring {:handler flurfunk.server.routes/flurfunk-server}
   :main flurfunk.server.jetty)
