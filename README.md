@@ -21,16 +21,6 @@ Building and running
 
     lein ring server-headless
 
-### Testing together with the web frontend ###
-
-    lein ring server 4000
-    cd ../flurfunk-web # checked out from git
-    lein cljs compile-dev
-    lein ring server-headless
-
-Then go to http://localhost:3000/index-dev.html and enter
-http://localhost:4000 as the server URL.
-
 ### Creating a WAR ###
 
     mkdir temp
@@ -44,30 +34,6 @@ http://localhost:4000 as the server URL.
 ### Running the standalone JAR ###
 
     java -jar temp/flurfunk-server.jar -Dflurfunk.port=8080
-
-### Deploying WAR to Nexus ###
-
-After completing the above step of creating a WAR, you can deploy it to Nexus
-like this:
-
-    lein pom temp/pom.xml
-
-    mvn deploy:deploy-file -Durl=https://server/nexus/content/repositories/snapshots/ \
-                       -DrepositoryId=viaboxx-snapshots \
-                       -Dfile=temp/flurfunk-server.war \
-                       -DpomFile=temp/pom.xml \
-                       -Dpackaging=war 
-
-TODO: Document how to do a release (hint, like the above, but with releases
-instead of snapshots, and a real version).
-
-### Downloading WAR from Nexus ###
-
-After deploying to Nexus, you might want to download the WAR to a server where
-it can be deployed into a container:
-
-    wget -O flurfunk-server.war --user=jenkins-artifacts --password=PASSWORD \
-        'https://server/nexus/service/local/artifact/maven/redirect?r=snapshots&g=de.viaboxx.flurfunk&a=flurfunk-server&v=0.1.0-SNAPSHOT&e=war'
 
 ### Using a persistent database ###
 
