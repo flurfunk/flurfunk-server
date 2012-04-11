@@ -23,17 +23,18 @@ Building and running
 
 ### Creating a WAR ###
 
-    mkdir temp
-    lein ring uberwar temp/flurfunk-server.war
+    lein ring uberwar flurfunk-server.war
+
+This will create _target/flurfunk-server.war_.
 
 ### Creating a standalone JAR that includes Jetty ###
 
     lein uberjar
-    mv target/flurfunk-server-*-standalone.jar temp/flurfunk-server.jar
+	mv target/flurfunk-server-*-standalone.jar target/flurfunk-server.jar
 
 ### Running the standalone JAR ###
 
-    java -jar temp/flurfunk-server.jar -Dflurfunk.port=8080
+    java -jar target/flurfunk-server.jar -Dflurfunk.port=8080
 
 ### Using a persistent database ###
 
