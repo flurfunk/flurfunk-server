@@ -30,7 +30,6 @@ This will create _target/flurfunk-server.war_.
 ### Creating a standalone JAR that includes Jetty ###
 
     lein uberjar
-	mv target/flurfunk-server-*-standalone.jar target/flurfunk-server.jar
 
 ### Running the standalone JAR ###
 

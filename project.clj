@@ -6,4 +6,5 @@
                  [ring/ring-jetty-adapter "0.3.11"]]
   :plugins [[lein-ring "0.6.3"]]
   :ring {:handler flurfunk.server.routes/app}
-  :main flurfunk.server.jetty)
+  :main flurfunk.server.jetty
+  :uberjar-name "flurfunk-server.jar")
