@@ -9,6 +9,3 @@
 #Exclude IDEA generated fields:
 /.idea
 *.iml
-
-#Exclude pom file generated with 'lein pom' (practical for importing project into idea)
-/pom.xml
