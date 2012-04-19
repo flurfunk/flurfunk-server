@@ -44,5 +44,6 @@
   (is (= 1 (count (get-messages {:before 10338})))))
 
 (deftest limit-messages
-  (dotimes [n 300] (add-message {:author "felix" :timestamp 1337 :body (str "n is " n)}))
+  (dotimes [n 300]
+    (add-message {:author "felix" :timestamp 1337 :body (str "n is " n)}))
   (is (= 200 (count (get-messages)))))
