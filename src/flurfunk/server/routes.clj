@@ -11,16 +11,26 @@
 (defn- parse-message [s]
     (ms/unmarshal-message (ms/parse-xml s)))
 
+(defn- parse-long [s]
+  (if (or (not s) (= s "NaN"))
+    nil
+   (Long. s)))
+
 (defroutes main-routes
   (GET "/" {uri :uri}
        (response/redirect (str uri (if (not (.endsWith uri "/")) "/")
                                "index.html")))
   (GET "/messages" {params :params}
        (ms/marshal-messages
-        (let [since (:since params)]
-          (if (and since (not (= since "NaN")))
-            (storage/get-messages {:since (Long. since)})
-            (storage/get-messages)))))
+        (let [since (parse-long (:since params))
+              before (parse-long (:before params))
+              count (parse-long (:count params))
+              opts {:since since :before before :count count}
+              opts (apply dissoc opts
+                          (for [[k v] opts :when (nil? v)] k))]
+          (if (empty? opts)
+            (storage/get-messages)
+            (storage/get-messages opts)))))
   (GET "/message/:id" [id]
        (if-let [message (storage/find-message id)]
          (ms/marshal-message message)
