@@ -71,6 +71,22 @@
                 "thomas" :author
                 1000000000000 :timestamp)))))
 
+(deftest test-get-messages-count
+  (with-redefs [storage/get-messages
+                (fn ([])
+                  ([options] (if (= (:count options) 1)
+                               [{:body "foo" :id "1337" :author "thomas"
+                                 :timestamp 1000000000000}])))]
+    (let [messages (ms/unmarshal-messages
+                    (http-get-xml "/messages" {:count "1"}))
+          message (first messages)]
+      (and (is (= (count messages) 1))
+           (are [v k] (= v (k message))
+                "foo" :body
+                "1337" :id
+                "thomas" :author
+                1000000000000 :timestamp)))))
+
 (deftest test-get-message-not-found
   (with-redefs [storage/find-message (fn [id] nil)]
     (is (= 404

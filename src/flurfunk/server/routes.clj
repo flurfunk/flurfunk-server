@@ -11,7 +11,7 @@
 (defn- parse-message [s]
     (ms/unmarshal-message (ms/parse-xml s)))
 
-(defn- parse-timestamp [s]
+(defn- parse-long [s]
   (if (or (not s) (= s "NaN"))
     nil
    (Long. s)))
@@ -22,9 +22,10 @@
                                "index.html")))
   (GET "/messages" {params :params}
        (ms/marshal-messages
-        (let [since (parse-timestamp (:since params))
-              before (parse-timestamp (:before params))
-              opts {:since since :before before}
+        (let [since (parse-long (:since params))
+              before (parse-long (:before params))
+              count (parse-long (:count params))
+              opts {:since since :before before :count count}
               opts (apply dissoc opts
                           (for [[k v] opts :when (nil? v)] k))]
           (if (empty? opts)

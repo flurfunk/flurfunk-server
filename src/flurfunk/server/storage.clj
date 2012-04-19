@@ -31,7 +31,8 @@
 
   (storage-get-messages
    [this options]
-     (take message-limit (filter (predicate-for-options options) @messages)))
+   (take (or (:count options) message-limit)
+         (filter (predicate-for-options (dissoc options :count)) @messages)))
 
   (storage-add-message
    [this message]

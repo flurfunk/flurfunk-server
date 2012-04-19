@@ -43,6 +43,12 @@
   (add-message {:author "thomas" :timestamp 10338 :body "second"})
   (is (= 1 (count (get-messages {:before 10338})))))
 
+(deftest test-messages-count
+  (clear-messages)
+  (add-message {:author "felix" :timestamp 10337 :body "first"})
+  (add-message {:author "thomas" :timestamp 10338 :body "second"})
+  (is (= 1 (count (get-messages {:count 1})))))
+
 (deftest limit-messages
   (dotimes [n 300]
     (add-message {:author "felix" :timestamp 1337 :body (str "n is " n)}))
