@@ -33,7 +33,7 @@ This will create _target/flurfunk-server.war_.
 
 ### Running the standalone JAR ###
 
-    java -jar target/flurfunk-server.jar -Dflurfunk.port=8080
+    java -jar target/flurfunk-server.jar
 
 ### Using a persistent database ###
 
