@@ -57,10 +57,12 @@
   
   (storage-get-messages
    [this options]
-   (filter (predicate-for-options options) ;;TODO: Filter in SQL statement
-	   (walk/keywordize-keys (client ["select" "messages"
-					  {"order" ["timestamp", "desc"]
-					   "limit" message-limit}]))))
+   ;; TODO: Filter and limit in query
+   (take (or (:count options) message-limit)
+         (filter (predicate-for-options (dissoc options :count))
+                 (walk/keywordize-keys (client ["select" "messages"
+                                                {"order" ["timestamp", "desc"]
+                                                 "limit" message-limit}])))))
   
   (storage-add-message
    [this message]
