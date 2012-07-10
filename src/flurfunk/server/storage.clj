@@ -60,9 +60,9 @@
    ;; TODO: Filter and limit in query
    (take (or (:count options) message-limit)
          (filter (predicate-for-options (dissoc options :count))
-                 (walk/keywordize-keys (client ["select" "messages"
-                                                {"order" ["timestamp", "desc"]
-                                                 "limit" message-limit}])))))
+                 (walk/keywordize-keys
+                  (client ["select" "messages"
+                           {"order" ["timestamp", "desc"]}])))))
   
   (storage-add-message
    [this message]
