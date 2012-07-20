@@ -20,9 +20,8 @@
 
 (defn marshal-message [message]
   (str "<message"
-       (reduce str (map #(attribute message %) [:id :author :timestamp]))
-       (attribute message :channels
-                  (fn [channels] (reduce #(str %1 "," %2) channels)))
+       (reduce str
+               (map #(attribute message %) [:id :author :timestamp :channels]))
        ">" (:body message) "</message>"))
 
 (defn marshal-messages [messages]
@@ -58,7 +57,10 @@
       (if (not (empty? timestamp))
         (conj! message {:timestamp (Long. timestamp)})))
     (if-let [channels (:channels attrs)]
-      (conj! message {:channels (string/split channels #" *, *")}))
+      (let [channel-coll (string/split channels #",")
+            channel-coll (map string/trim channel-coll)
+            channel-string (reduce #(str %1 "," %2) channel-coll)]
+        (conj! message {:channels channel-string})))
     (persistent! message)))
   
 (defn unmarshal-messages [xml]

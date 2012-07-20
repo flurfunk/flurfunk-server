@@ -16,7 +16,7 @@
 
 (deftest test-marshal-message-with-channels
   (is (= "<message channels='Users,Important'></message>"
-         (marshal-message {:channels ["Users" "Important"]}))))
+         (marshal-message {:channels "Users,Important"}))))
 
 (deftest test-unmarshal-message
   (is (= {:id "1" :author "felix" :timestamp 1000000000001 :body "foobar"}
@@ -41,6 +41,6 @@
                                            :content ["foobar"]}]}))))
 
 (deftest test-unmarshal-message-with-channels
-  (is (= {:channels ["Users" "Important"] :body ""}
+  (is (= {:channels "Users,Important" :body ""}
          (unmarshal-message {:attrs {:channels "Users, Important"}
                              :content [""]}))))
