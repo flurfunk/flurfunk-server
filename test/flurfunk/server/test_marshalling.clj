@@ -14,6 +14,10 @@
          (marshal-messages [{:id "1" :author "felix" :timestamp 1337
                              :body "foobar"}]))))
 
+(deftest test-marshal-message-with-channels
+  (is (= "<message channels='Users,Important'></message>"
+         (marshal-message {:channels ["Users" "Important"]}))))
+
 (deftest test-unmarshal-message
   (is (= {:id "1" :author "felix" :timestamp 1000000000001 :body "foobar"}
          (unmarshal-message {:attrs {:id "1" :author "felix"

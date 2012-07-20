@@ -9,11 +9,20 @@
 
 ;; TODO: The marshal methods should return an XML object (no string).
 
+(defn attribute
+  ([message k]
+     (attribute message k identity))
+  ([message k convert]
+     (if-let [v (k message)]
+       (str " " (name k) "='" (convert v) "'")
+       "")))
+
 (defn marshal-message [message]
-  (str "<message id='" (:id message)
-       "' author='" (:author message)
-       "' timestamp='" (:timestamp message)
-       "'>" (:body message) "</message>"))
+  (str "<message"
+       (reduce str (map #(attribute message %) [:id :author :timestamp]))
+       (attribute message :channels
+                  (fn [channels] (reduce #(str %1 "," %2) channels)))
+       ">" (:body message) "</message>"))
 
 (defn marshal-messages [messages]
   (str "<messages>"
