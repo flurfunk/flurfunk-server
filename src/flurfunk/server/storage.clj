@@ -80,11 +80,11 @@
    (client ["delete", "messages"])))
 
 (defn- make-storage []
-  (if (= (System/getProperty "flurfunk.fleetdb") "true")
+  (if (= (System/getProperty "flurfunk.db") "fleetdb")
     (FleetDBStorage. (db/connect {:host "127.0.0.1" :port 3400}))
     (do
       (println (str "Using memory database. Set the system property "
-                    "\"flurfunk.fleetdb\" to \"true\" if you want a real one."))
+                    "\"flurfunk.db\" to \"fleetdb\" if you want a real one."))
       (MemoryStorage. (atom [])))))
 
 (def ^{:private true} storage (make-storage))

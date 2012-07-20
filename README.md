@@ -50,10 +50,10 @@ Then launch the fleetdb server:
 
 where flurfunk.fdb is a pure text file where stuff will be stored.
 
-Finally, run the server with the _flurfunk.fleetdb_ system property
-set to _true_, like this:
+Finally, run the server with the _flurfunk.db_ system property
+set to _fleetdb_, like this:
 
-    JAVA_OPTS="-Dflurfunk.fleetdb=true" lein ring server-headless
+    JAVA_OPTS="-Dflurfunk.db=fleetdb lein ring server-headless
 
 License
 -------
