@@ -39,3 +39,8 @@
            (unmarshal-messages {:content [{:attrs {:id "1" :author "felix"
                                                    :timestamp "1337"}
                                            :content ["foobar"]}]}))))
+
+(deftest test-unmarshal-message-with-channels
+  (is (= {:channels ["Users" "Important"] :body ""}
+         (unmarshal-message {:attrs {:channels "Users, Important"}
+                             :content [""]}))))

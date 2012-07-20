@@ -1,7 +1,8 @@
 (ns flurfunk.server.marshalling
   "Marshalling and unmarshalling of XML objects."
   (:require [clojure.xml :as xml]
-            [clojure.java.io :as io]))
+            [clojure.java.io :as io]
+            [clojure.string :as string]))
 
 (defn parse-xml [input]
   (xml/parse (io/input-stream (if (instance? String input)
@@ -48,13 +49,16 @@
 (defn unmarshal-message [xml]
   (let [attrs (:attrs xml)
         timestamp (:timestamp attrs)
-        message (transient {:body (escape-xml (first (:content xml)))
-                            :author (escape-xml (:author attrs))})]
+        message (transient {:body (escape-xml (first (:content xml)))})]
     (if-let [id (:id attrs)] 
       (conj! message {:id id}))
+    (if-let [author (:author attrs)] 
+      (conj! message {:author (escape-xml author)}))    
     (if-let [timestamp (:timestamp attrs)]
       (if (not (empty? timestamp))
         (conj! message {:timestamp (Long. timestamp)})))
+    (if-let [channels (:channels attrs)]
+      (conj! message {:channels (string/split channels #" *, *")}))
     (persistent! message)))
   
 (defn unmarshal-messages [xml]
