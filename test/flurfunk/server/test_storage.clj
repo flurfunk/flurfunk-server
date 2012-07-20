@@ -15,14 +15,16 @@
 
 (deftest test-find-message
   (clear-messages)
-  (add-message {:author "felix" :timestamp 1337 :body "foobar"})
+  (add-message {:author "felix" :timestamp 1337 :body "foobar"
+                :channels "Users,Infrastructure"})
   (let [id (:id (first (get-messages)))]
     (add-message {:author "thomas" :timestamp 1338 :body "barfoo"})
     (let [message (find-message id)]
       (are [v k] (= v (k message))
 	   "foobar" :body
 	   "felix" :author
-           1337 :timestamp))))
+           1337 :timestamp
+           "Users,Infrastructure" :channels))))
 
 (deftest test-ordered-messages
   (clear-messages)

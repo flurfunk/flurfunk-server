@@ -1,7 +1,8 @@
 (ns flurfunk.server.marshalling
   "Marshalling and unmarshalling of XML objects."
   (:require [clojure.xml :as xml]
-            [clojure.java.io :as io]))
+            [clojure.java.io :as io]
+            [clojure.string :as string]))
 
 (defn parse-xml [input]
   (xml/parse (io/input-stream (if (instance? String input)
@@ -9,11 +10,19 @@
 
 ;; TODO: The marshal methods should return an XML object (no string).
 
+(defn attribute
+  ([message k]
+     (attribute message k identity))
+  ([message k convert]
+     (if-let [v (k message)]
+       (str " " (name k) "='" (convert v) "'")
+       "")))
+
 (defn marshal-message [message]
-  (str "<message id='" (:id message)
-       "' author='" (:author message)
-       "' timestamp='" (:timestamp message)
-       "'>" (:body message) "</message>"))
+  (str "<message"
+       (reduce str
+               (map #(attribute message %) [:id :author :timestamp :channels]))
+       ">" (:body message) "</message>"))
 
 (defn marshal-messages [messages]
   (str "<messages>"
@@ -39,13 +48,19 @@
 (defn unmarshal-message [xml]
   (let [attrs (:attrs xml)
         timestamp (:timestamp attrs)
-        message (transient {:body (escape-xml (first (:content xml)))
-                            :author (escape-xml (:author attrs))})]
+        message (transient {:body (escape-xml (first (:content xml)))})]
     (if-let [id (:id attrs)] 
       (conj! message {:id id}))
+    (if-let [author (:author attrs)] 
+      (conj! message {:author (escape-xml author)}))    
     (if-let [timestamp (:timestamp attrs)]
       (if (not (empty? timestamp))
         (conj! message {:timestamp (Long. timestamp)})))
+    (if-let [channels (:channels attrs)]
+      (let [channel-coll (string/split channels #",")
+            channel-coll (map string/trim channel-coll)
+            channel-string (reduce #(str %1 "," %2) channel-coll)]
+        (conj! message {:channels channel-string})))
     (persistent! message)))
   
 (defn unmarshal-messages [xml]
