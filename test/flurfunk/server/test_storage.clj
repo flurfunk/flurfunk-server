@@ -16,7 +16,7 @@
 (deftest test-find-message
   (clear-messages)
   (add-message {:author "felix" :timestamp 1337 :body "foobar"
-                :channels "Users,Infrastructure"})
+                :channels "users,Infrastructure"})
   (let [id (:id (first (get-messages)))]
     (add-message {:author "thomas" :timestamp 1338 :body "barfoo"})
     (let [message (find-message id)]
@@ -24,7 +24,7 @@
 	   "foobar" :body
 	   "felix" :author
            1337 :timestamp
-           "Users,Infrastructure" :channels))))
+           "users,Infrastructure" :channels))))
 
 (deftest test-ordered-messages
   (clear-messages)
