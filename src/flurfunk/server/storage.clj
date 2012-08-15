@@ -1,6 +1,7 @@
 (ns flurfunk.server.storage
   "Storage and retrieval of objects."
   (:require [fleetdb.client :as db]
+            [clojure.string :as string]
 	    [clojure.walk :as walk]))
 
 (def message-limit 200)
@@ -83,8 +84,9 @@
   (if (= (System/getProperty "flurfunk.db") "fleetdb")
     (FleetDBStorage. (db/connect {:host "127.0.0.1" :port 3400}))
     (do
-      (println (str "Using memory database. Set the system property "
-                    "\"flurfunk.db\" to \"fleetdb\" if you want a real one."))
+      (println (string/trim "
+Using in-memory database. To use a persistent database, set the system property
+\"flurfunk.db\" to \"fleetdb\" or \"postgresql\"."))
       (MemoryStorage. (atom [])))))
 
 (def ^{:private true} storage (make-storage))
