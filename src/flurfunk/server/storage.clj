@@ -17,9 +17,13 @@
   (str (java.util.UUID/randomUUID )))
 
 (defn- predicate-for-option [option value]
-  (case option
-	:before (fn [message] (< (:timestamp message) value))
-	:since (fn [message] (> (:timestamp message) value))))
+  (let [get-timestamp (fn [message]
+                        (if-let [timestamp (:timestamp message)]
+                          (Long. timestamp)
+                          0))]
+   (case option
+         :before (fn [message] (< (get-timestamp message) value))
+         :since (fn [message] (> (get-timestamp message) value)))))
 
 (defn- predicate-for-options [options]
   (let [predicates (map (fn [option]
@@ -59,7 +63,6 @@
   
   (storage-get-messages
    [this options]
-   ;; TODO: Filter and limit in query
    (take (or (:count options) message-limit)
          (filter (predicate-for-options (dissoc options :count))
                  (walk/keywordize-keys
@@ -85,30 +88,39 @@
      (or (System/getenv "DATABASE_URL")
          "postgresql://flurfunk:flurfunk@localhost:5432/flurfunk"))
 
-(defn- postgresql-messages-table-exists?
-  []
+(defn- postgresql-table-exists?
+  [name]
   (sql/with-query-results results
     [(str "SELECT EXISTS(SELECT * FROM information_schema.tables"
-          " WHERE table_name = 'messages')")]
+          " WHERE table_name = '" name "')")]
     (boolean (Boolean. (:?column? (first results))))))
+
+(defn- postgresql-select-messages
+  [constraints]
+  (try (sql/with-connection postgresql-db
+         (if (postgresql-table-exists? "messages")
+           (vec (sql/with-query-results results
+                  [(str "SELECT akeys(attributes), avals(attributes)"
+                        " FROM messages " constraints)]
+                  (map #(zipmap (map keyword (vec (.getArray (:akeys %))))
+                                (vec (.getArray (:avals %))))
+                       (into [] results))))))
+       (catch Exception e (.printStackTrace e))))
+
+(defn- postgresql-select-messages-limited
+  [limit]
+  (postgresql-select-messages (str "LIMIT " limit)))
 
 (deftype PostgreSQLStorage [] Storage
   (storage-get-messages
    [this]
-   (try (sql/with-connection postgresql-db
-          (if (postgresql-messages-table-exists?)
-            (vec (sql/with-query-results results
-                   [(str "SELECT akeys(attributes), avals(attributes)"
-                         " FROM messages LIMIT " message-limit)]
-                   (map #(zipmap (map keyword (vec (.getArray (:akeys %))))
-                                 (vec (.getArray (:avals %))))
-                        (into [] results))))))
-        (catch Exception e (.printStackTrace e))))
+   (postgresql-select-messages-limited message-limit))
   
   (storage-get-messages
    [this options]
-   ;; TODO: If db exists, query based on options
-   [])
+   (filter (predicate-for-options (dissoc options :count))
+           (postgresql-select-messages-limited (or (:count options)
+                                                   message-limit))))
 
   (storage-add-message
    [this message]
@@ -124,8 +136,7 @@
 
   (storage-find-message
    [this id]
-   ;; TODO: if db exists, query by id
-   )
+   (postgresql-select-messages (str "WHERE id = " id)))
 
   (storage-clear-messages
    [this]
