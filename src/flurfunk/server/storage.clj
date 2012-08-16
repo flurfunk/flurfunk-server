@@ -103,7 +103,7 @@
                                         (map keyword
                                              (vec (.getArray (:akeys result))))
                                         (vec (.getArray (:avals result))))
-                               message (assoc message :id (:id result))
+                               message (assoc message :id (str (:id result)))
                                message (update-in message [:timestamp]
                                                   #(if % (Long. %) 0))]
                            message))
