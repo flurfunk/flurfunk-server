@@ -37,8 +37,23 @@ This will create _target/flurfunk-server.war_.
 
 ### Using a persistent database ###
 
-Messages are per default stored in memory. For a persistent database, install
-fleetdb:
+Messages are per default stored in memory. There are two options for a
+persistent storage:
+
+#### PostgreSQL ####
+
+Flurfunk requires PostgreSQL 9.1 or above, and the _hstore_ addon.
+
+Create a user _flurfunk_ with password _flurfunk_ and a database
+_flurfunk_, or set the environment variable `DATABASE_URL` to a JDBC
+URL string.
+
+Then run the server with the _flurfunk.db_ system property set to
+_postgresql_, like this:
+
+    JAVA_OPTS="-Dflurfunk.db=postgresql lein ring server-headless
+
+#### FleetDB ####
 
     mkdir temp
     cd temp
@@ -47,8 +62,6 @@ fleetdb:
 Then launch the fleetdb server:
 
     scripts/fleetdb-flurfunk
-
-where flurfunk.fdb is a pure text file where stuff will be stored.
 
 Finally, run the server with the _flurfunk.db_ system property
 set to _fleetdb_, like this:
