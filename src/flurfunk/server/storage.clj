@@ -17,13 +17,9 @@
   (str (java.util.UUID/randomUUID )))
 
 (defn- predicate-for-option [option value]
-  (let [get-timestamp (fn [message]
-                        (if-let [timestamp (:timestamp message)]
-                          (Long. timestamp)
-                          0))]
-   (case option
-         :before (fn [message] (< (get-timestamp message) value))
-         :since (fn [message] (> (get-timestamp message) value)))))
+  (case option
+        :before (fn [message] (< (:timestamp message) value))
+        :since (fn [message] (> (:timestamp message) value))))
 
 (defn- predicate-for-options [options]
   (let [predicates (map (fn [option]
@@ -100,10 +96,17 @@
   (try (sql/with-connection postgresql-db
          (if (postgresql-table-exists? "messages")
            (vec (sql/with-query-results results
-                  [(str "SELECT akeys(attributes), avals(attributes)"
+                  [(str "SELECT id, akeys(attributes), avals(attributes)"
                         " FROM messages " constraints)]
-                  (map #(zipmap (map keyword (vec (.getArray (:akeys %))))
-                                (vec (.getArray (:avals %))))
+                  (map (fn [result]
+                         (let [message (zipmap
+                                        (map keyword
+                                             (vec (.getArray (:akeys result))))
+                                        (vec (.getArray (:avals result))))
+                               message (assoc message :id (:id result))
+                               message (update-in message [:timestamp]
+                                                  #(if % (Long. %) 0))]
+                           message))
                        (into [] results))))))
        (catch Exception e (.printStackTrace e))))
 
