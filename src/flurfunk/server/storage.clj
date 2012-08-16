@@ -112,7 +112,7 @@
 
 (defn- postgresql-select-messages-limited
   [limit]
-  (postgresql-select-messages (str "LIMIT " limit)))
+  (postgresql-select-messages (str "ORDER BY id DESC LIMIT " limit)))
 
 (deftype PostgreSQLStorage [] Storage
   (storage-get-messages
