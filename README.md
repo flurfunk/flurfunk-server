@@ -51,7 +51,7 @@ URL string.
 Then run the server with the _flurfunk.db_ system property set to
 _postgresql_, like this:
 
-    JAVA_OPTS="-Dflurfunk.db=fleetdb lein ring server-headless
+    JAVA_OPTS="-Dflurfunk.db=postgresql lein ring server-headless
 
 #### FleetDB ####
 
