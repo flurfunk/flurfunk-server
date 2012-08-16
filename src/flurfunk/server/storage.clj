@@ -139,7 +139,7 @@
 
   (storage-find-message
    [this id]
-   (postgresql-select-messages (str "WHERE id = " id)))
+   (first (postgresql-select-messages (str "WHERE id = " id))))
 
   (storage-clear-messages
    [this]
