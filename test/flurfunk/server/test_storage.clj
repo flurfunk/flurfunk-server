@@ -21,8 +21,8 @@
     (add-message {:author "thomas" :timestamp 1338 :body "barfoo"})
     (let [message (find-message id)]
       (are [v k] (= v (k message))
-	   "foobar" :body
-	   "felix" :author
+           "foobar" :body
+           "felix" :author
            1337 :timestamp
            "users,infrastructure" :channels))))
 
