@@ -42,6 +42,7 @@
 (defn- escape-xml [string]
   (replace-all string [["&" "&amp;"]
                        ["\"" "&quot;"]
+                       ["'" "&#39;"]
                        ["<" "&lt;"]
                        [">" "&gt;"]]))
 
