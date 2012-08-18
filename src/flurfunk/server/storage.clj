@@ -130,15 +130,16 @@
 
   (storage-add-message
    [this message]
-   (sql/with-connection postgresql-db
-     (let [entries (map #(str \" (name (first %))\" " => \"" (second %) \")
-                        message)
-           value-string (string/join ",\n" entries)]
-       (sql/do-commands
-        (str "CREATE TABLE IF NOT EXISTS messages"
-             " (id serial PRIMARY KEY, attributes hstore)")
-        (str "INSERT INTO messages (attributes) VALUES ('"
-             value-string "')")))))
+   (try (sql/with-connection postgresql-db
+          (let [entries (map #(str \" (name (first %))\" " => \"" (second %) \")
+                             message)
+                value-string (string/join ",\n" entries)]
+            (sql/do-commands
+             (str "CREATE TABLE IF NOT EXISTS messages"
+                  " (id serial PRIMARY KEY, attributes hstore)")
+             (str "INSERT INTO messages (attributes) VALUES ('"
+                  value-string "')"))))
+        (catch Exception e (.printStackTrace e))))
 
   (storage-find-message
    [this id]
