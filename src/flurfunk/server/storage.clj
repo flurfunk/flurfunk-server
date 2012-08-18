@@ -110,20 +110,23 @@
                        (into [] results))))))
        (catch Exception e (.printStackTrace e))))
 
-(defn- postgresql-select-messages-limited
-  [limit]
-  (postgresql-select-messages (str "ORDER BY id DESC LIMIT " limit)))
-
 (deftype PostgreSQLStorage [] Storage
   (storage-get-messages
    [this]
-   (postgresql-select-messages-limited message-limit))
+   (postgresql-select-messages (str "ORDER BY id DESC LIMIT " message-limit)))
   
   (storage-get-messages
    [this options]
-   (filter (predicate-for-options (dissoc options :count))
-           (postgresql-select-messages-limited (or (:count options)
-                                                   message-limit))))
+   (let [limit (or (:count options) message-limit)
+         before? (not (nil? (:before options)))
+         messages (postgresql-select-messages (str "ORDER BY id DESC"
+                                                   (if (not before?)
+                                                     (str " LIMIT " limit))))
+         messages (filter (predicate-for-options (dissoc options :count))
+                          messages)]
+     (if before?
+       (take limit messages)
+       messages)))
 
   (storage-add-message
    [this message]
