@@ -1,4 +1,4 @@
-(defproject de.viaboxx.flurfunk/flurfunk-server "0.1.0-SNAPSHOT" 
+(defproject de.viaboxx.flurfunk/flurfunk-server "1.0" 
   :description "The Funk of the Flur"
   :dependencies [[org.clojure/clojure "1.3.0"]
                  [org.clojure/java.jdbc "0.2.3"]
