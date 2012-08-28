@@ -14,9 +14,32 @@
                       "if you want a specific one."))
         default-port)))
 
+(require 'clojure.java.io)
+(defn- load-props [file-name]
+    (with-open [^java.io.Reader reader (clojure.java.io/reader (clojure.java.io/resource file-name))]
+          (let [props (java.util.Properties.)]
+                  (.load props reader)
+                  (into {} (for [[k v] props] [(keyword k) (str v)])))))
+
+(defn- get-version []
+  (let [meta-file "META-INF/maven/de.viaboxx.flurfunk/flurfunk-server/pom.properties"]
+    (if-let [props (load-props meta-file)]
+             (:version props)
+             "unknown")))
+
+(defn- print-version []
+  (println (str
+             "==========================\n"
+             "Flurfunk Server\n"
+             "==========================\n"
+             "http://flurfunk.github.com\n"
+             "==========================\n"
+             "Starting flurfunk-server:" (get-version))))
+
 (defn -main [& args]
   (let [port (get-port)]
-    (try (run-jetty app {:port (Integer. port)})
-         (catch NumberFormatException e
-           (println (str "Invalid port number: '" port "'"))
-           (System/exit 1)))))
+    (do (print-version)
+      (try (run-jetty app {:port (Integer. port)})
+           (catch NumberFormatException e
+             (println (str "Invalid port number: '" port "'"))
+             (System/exit 1))))))

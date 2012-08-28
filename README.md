@@ -19,7 +19,7 @@ Building and running
 
 ### Running the server ###
 
-    lein ring server-headless
+    lein ring server-headless [port]
 
 ### Creating a WAR ###
 
