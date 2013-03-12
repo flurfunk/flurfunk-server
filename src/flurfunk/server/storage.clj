@@ -81,7 +81,7 @@
    (client ["delete", "messages"])))
 
 (def ^{:private true} postgresql-db
-     (or (System/getenv "DATABASE_URL")
+     (or (System/getProperty "flurfunk.db.url")
          "postgresql://flurfunk:flurfunk@localhost:5432/flurfunk"))
 
 (defn- postgresql-table-exists?
