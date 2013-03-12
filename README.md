@@ -48,7 +48,7 @@ Create a user _flurfunk_ with password _flurfunk_ and a database
 _flurfunk_, or include the system property `flurfunk.db.url` to a JDBC
 URL string like this:
 
-    -Dflurfunk.db.url=-Dflurfunk.db.url=postgresql://flurfunk:xxxxxxxxx@localhost:5432/flurfunk
+    -Dflurfunk.db.url=postgresql://flurfunk:xxxxxxxxx@localhost:5432/flurfunk
 
 Then run the server with the _flurfunk.db_ system property set to
 _postgresql_, like this (optionally including the extra url parameter
