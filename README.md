@@ -45,11 +45,14 @@ persistent storage:
 Flurfunk requires PostgreSQL 9.1 or above, and the _hstore_ addon.
 
 Create a user _flurfunk_ with password _flurfunk_ and a database
-_flurfunk_, or set the environment variable `DATABASE_URL` to a JDBC
-URL string.
+_flurfunk_, or include the system property `flurfunk.db.url` to a JDBC
+URL string like this:
+
+    -Dflurfunk.db.url=-Dflurfunk.db.url=postgresql://flurfunk:xxxxxxxxx@localhost:5432/flurfunk
 
 Then run the server with the _flurfunk.db_ system property set to
-_postgresql_, like this:
+_postgresql_, like this (optionally including the extra url parameter
+from above):
 
     JAVA_OPTS="-Dflurfunk.db=postgresql" lein ring server-headless
 
