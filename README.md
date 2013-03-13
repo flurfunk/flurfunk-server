@@ -9,7 +9,7 @@ Building and running
 
 ### Installing Leiningen 2 ###
 
-    curl -O https://raw.github.com/technomancy/leiningen/preview/bin/lein
+    curl -O https://raw.github.com/technomancy/leiningen/stable/bin/lein
     chmod +x lein
     mv lein ~/bin/ # Make sure that ~/bin/ exists and is on the $PATH
 
