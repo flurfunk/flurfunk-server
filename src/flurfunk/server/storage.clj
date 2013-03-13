@@ -89,7 +89,7 @@
   (sql/with-query-results results
     [(str "SELECT EXISTS(SELECT * FROM information_schema.tables"
           " WHERE table_name = '" name "')")]
-    (boolean (Boolean. (:?column? (first results))))))
+    (boolean (Boolean. (:exists (first results))))))
 
 (defn- postgresql-select-messages
   [constraints]
